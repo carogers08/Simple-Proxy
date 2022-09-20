@@ -69,20 +69,26 @@ public class ProxyServer {
     }
 
     public synchronized void writeLog(String info) {
-
-        /**
-         * To do
-         * write string (info) to the log file, and add the current time stamp
-         * e.g. String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-         *
-         */
-
-        FileWriter fileWriter = new FileWriter(logFileName);
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date())
-        fileWriter.write(info + " " + timeStamp);
+        try {
+            FileWriter fileWriter = new FileWriter(logFileName);
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+            fileWriter.write(info + " " + timeStamp);
+        }
+        catch (Exception e)
+        {
+            writeError(e.getMessage());
+        }
     }
 
     public synchronized void writeError(String error) {
-        //TO DO WRITE OUT TO THE ERROR LOG
+        try {
+            FileWriter fileWriter = new FileWriter(errorLog);
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+            fileWriter.write(error + " " + timeStamp);
+        }
+        catch (Exception e)
+        {
+            writeError(e.getMessage());
+        }
     }
 }
