@@ -68,6 +68,10 @@ public class ProxyServer {
          * e.g. String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
          *
          */
+
+        FileWriter fileWriter = new FileWriter(logFileName);
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date())
+        fileWriter.write(info + " " + timeStamp);
     }
 
 }
