@@ -1,9 +1,6 @@
 package Proxy;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -24,6 +21,7 @@ public class ProxyServer {
     ServerSocket proxySocket;
 
     String logFileName = "log.txt";
+    String errorLog = "errors.txt";
 
     public static void main(String[] args) {
         new ProxyServer().startServer(Integer.parseInt(args[0]));
@@ -39,15 +37,25 @@ public class ProxyServer {
             cacheDir.mkdirs();
         }
 
-        /**
-         * To do:
-         * create a serverSocket to listen on the port (proxyPort)
-         * Create a thread (RequestHandler) for each new client connection
-         * remember to catch Exceptions!
-         *
-         */
+        while(true) {
+            ServerSocket server;
+            DataOutputStream os;
+            DataInputStream is;
 
+            try {
+                server = new ServerSocket(proxyPort);
+                Socket client = server.accept();
 
+                RequestHandler clientHandler = new RequestHandler(client, this);
+                clientHandler.run();
+
+                client.close();
+            }
+            catch (Exception e)
+            {
+                writeError(e.getMessage());
+            }
+        }
     }
 
 
@@ -70,4 +78,7 @@ public class ProxyServer {
          */
     }
 
+    public synchronized void writeError(String error) {
+        //TO DO WRITE OUT TO THE ERROR LOG
+    }
 }

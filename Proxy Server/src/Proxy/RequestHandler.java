@@ -13,22 +13,14 @@ public class RequestHandler extends Thread {
 
 
     Socket clientSocket;
-
     InputStream inFromClient;
-
     OutputStream outToClient;
 
     byte[] request = new byte[1024];
-
-
     private ProxyServer server;
 
-
     public RequestHandler(Socket clientSocket, ProxyServer proxyServer) {
-
-
         this.clientSocket = clientSocket;
-
 
         this.server = proxyServer;
 
