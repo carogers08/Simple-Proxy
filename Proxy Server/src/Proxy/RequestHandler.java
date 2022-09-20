@@ -76,6 +76,9 @@ public class RequestHandler extends Thread {
          * (5) close file, and sockets.
          */
 
+        clientSocket = new Socket( server, 80);
+        inFromServer = new DataInputStream();
+
     }
 
 
