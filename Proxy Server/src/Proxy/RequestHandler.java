@@ -35,7 +35,6 @@ public class RequestHandler extends Thread {
 
     @Override
     public void run() {
-
         /**
          * To do
          * Process the requests from a client. In particular,
@@ -46,11 +45,33 @@ public class RequestHandler extends Thread {
          *
          */
 
+        try {
+            byte[] request = inFromClient.readAllBytes();
+            String requestString = new String(request);
+            if (!requestString.toLowerCase().contains("GET")) {
+                return;
+            }
+            else {
+                String url = requestString.substring(requestString.indexOf(' '));
+                url = url.substring(0, url.indexOf(' '));
+
+                server.writeLog(url); //CALEBX - We might need to include browser ip in this whatever that means. browserIP = ip of the requesting client?
+
+                String cachedFileName = server.getCache(url);
+                if (cachedFileName != null)
+                    sendCachedInfoToClient(cachedFileName);
+                else
+                    proxyServertoClient(request);
+            }
+        }
+        catch (Exception e)
+        {
+            server.writeError(e.getMessage());
+        }
     }
 
 
     private void proxyServertoClient(byte[] clientRequest) {
-
         FileOutputStream fileWriter = null;
         Socket toWebServerSocket = null;
         InputStream inFromServer;
