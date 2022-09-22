@@ -4,14 +4,11 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 
 // RequestHandler is thread that process requests of one client connection
 public class RequestHandler extends Thread {
-
-
     Socket clientSocket;
     InputStream inFromClient;
     OutputStream outToClient;
@@ -37,7 +34,6 @@ public class RequestHandler extends Thread {
 
 
     @Override
-
     public void run() {
 
         /**
@@ -76,8 +72,8 @@ public class RequestHandler extends Thread {
          * (5) close file, and sockets.
          */
 
-        clientSocket = new Socket( server, 80);
-        inFromServer = new DataInputStream();
+        //clientSocket = new Socket(server, 80);
+        //inFromServer = new DataInputStream();
 
     }
 

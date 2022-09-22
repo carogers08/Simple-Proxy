@@ -3,9 +3,6 @@ package Proxy;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -73,6 +70,7 @@ public class ProxyServer {
             FileWriter fileWriter = new FileWriter(logFileName);
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
             fileWriter.write(info + " " + timeStamp);
+            fileWriter.close();
         }
         catch (Exception e)
         {
@@ -85,6 +83,7 @@ public class ProxyServer {
             FileWriter fileWriter = new FileWriter(errorLog);
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
             fileWriter.write(error + " " + timeStamp);
+            fileWriter.close();
         }
         catch (Exception e)
         {
