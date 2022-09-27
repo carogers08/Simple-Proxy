@@ -34,7 +34,7 @@ public class ProxyServer {
             cacheDir.mkdirs();
         }
 
-        while(true) {
+        while (true) {
             ServerSocket server;
 
             try {

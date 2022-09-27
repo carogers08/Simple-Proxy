@@ -16,6 +16,8 @@ public class RequestHandler extends Thread {
     byte[] request = new byte[1024];
     private ProxyServer server;
 
+    private boolean previousWasR = false;
+
     public RequestHandler(Socket clientSocket, ProxyServer proxyServer) {
         this.clientSocket = clientSocket;
 
@@ -48,7 +50,7 @@ public class RequestHandler extends Thread {
         try {
             byte[] request = inFromClient.readAllBytes();
             String requestString = new String(request);
-            if (!requestString.toLowerCase().contains("GET")) {
+            if (!requestString.toLowerCase().contains("get")) {
                 return;
             }
             else {
@@ -61,7 +63,7 @@ public class RequestHandler extends Thread {
                 if (cachedFileName != null)
                     sendCachedInfoToClient(cachedFileName);
                 else
-                    proxyServertoClient(request);
+                    proxyServertoClient(request, url);
             }
         }
         catch (Exception e)
@@ -71,7 +73,7 @@ public class RequestHandler extends Thread {
     }
 
 
-    private void proxyServertoClient(byte[] clientRequest) {
+    private void proxyServertoClient(byte[] clientRequest, String url) {
         FileOutputStream fileWriter = null;
         Socket toWebServerSocket = null;
         InputStream inFromServer;
@@ -93,9 +95,17 @@ public class RequestHandler extends Thread {
          * (5) close file, and sockets.
          */
 
-        //clientSocket = new Socket(server, 80);
-        //inFromServer = new DataInputStream();
-
+        try {
+            String temp = url.substring(7);
+            clientSocket = new Socket(url.substring(temp.indexOf("/")), 80);
+            inFromServer = new DataInputStream(clientSocket.getInputStream());
+            outToServer = new DataOutputStream(clientSocket.getOutputStream());
+            outToServer.write(clientRequest);
+            outToClient.write(inFromServer.readAllBytes());
+            clientSocket.close();
+        } catch (Exception e) {
+            server.writeError(e.getMessage());
+        }
     }
 
 
