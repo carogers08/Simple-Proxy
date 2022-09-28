@@ -67,7 +67,7 @@ public class ProxyServer {
         try {
             FileWriter fileWriter = new FileWriter(logFileName);
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-            fileWriter.write(timeStamp + " " + info);
+            fileWriter.append(timeStamp + " " + info);
             fileWriter.close();
         }
         catch (Exception e)
@@ -80,7 +80,7 @@ public class ProxyServer {
         try {
             FileWriter fileWriter = new FileWriter(errorLog);
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-            fileWriter.write(timeStamp + " " + error);
+            fileWriter.append(timeStamp + " " + error);
             fileWriter.close();
         }
         catch (Exception e) { } //Not sure what to do if even our logger fails :joy:
