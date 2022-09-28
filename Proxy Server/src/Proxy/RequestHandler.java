@@ -48,14 +48,14 @@ public class RequestHandler extends Thread {
          */
 
         try {
-            byte[] request = inFromClient.readAllBytes();
+            inFromClient.read(this.request);
             String requestString = new String(request);
             if (!requestString.toLowerCase().contains("get")) {
                 return;
             }
             else {
-                String url = requestString.substring(requestString.indexOf(' '));
-                url = url.substring(0, url.indexOf(' '));
+                String url = requestString.substring(requestString.indexOf(" ") + 1);
+                url = url.substring(0, url.indexOf(" "));
 
                 server.writeLog(url); //CALEBX - We might need to include browser ip in this whatever that means. browserIP = ip of the requesting client?
 
