@@ -73,7 +73,7 @@ public class RequestHandler extends Thread {
     }
 
 
-    private void proxyServertoClient(byte[] clientRequest, String url) {
+    private void proxyServertoClient(byte[] clientRequest, String urlString) {
         FileOutputStream fileWriter = null;
         Socket toWebServerSocket = null;
         InputStream inFromServer;
@@ -94,15 +94,29 @@ public class RequestHandler extends Thread {
          * (4) Write the web server's response to a cache file, put the request URL and cache file name to the cache Map
          * (5) close file, and sockets.
          */
-
+        String url = urlString.substring(7);
+        String pieces[] = url.split(":");
+        url = pieces[0];
+        int port  = Integer.valueOf(pieces[1]);
         try {
-            String temp = url.substring(7);
-            clientSocket = new Socket(url.substring(temp.indexOf("/")), 80);
-            inFromServer = new DataInputStream(clientSocket.getInputStream());
-            outToServer = new DataOutputStream(clientSocket.getOutputStream());
+            InetAddress address = InetAddress.getByName(url);
+            toWebServerSocket = new Socket(address, port);
+            inFromServer = toWebServerSocket.getInputStream();
+            outToServer = toWebServerSocket.getOutputStream();
+            fileWriter = new FileOutputStream(fileName);
             outToServer.write(clientRequest);
-            outToClient.write(inFromServer.readAllBytes());
-            clientSocket.close();
+            outToServer.flush();
+            while(inFromServer.read(serverReply) != -1){
+                outToClient.write(serverReply, 0, inFromServer.read(serverReply));
+                outToClient.flush();
+                fileWriter.write(serverReply, 0, inFromServer.read(serverReply));
+                fileWriter.close();
+            }
+            server.putCache(clientSocket.getInetAddress().getHostAddress(), fileName);
+            inFromServer.close();
+            toWebServerSocket.close();
+            fileWriter.close();
+            outToServer.close();
         } catch (Exception e) {
             server.writeError(e.getMessage());
         }
